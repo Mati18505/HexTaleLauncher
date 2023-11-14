@@ -1,0 +1,22 @@
+.playButton {
+    background-color: hsl(211, 100%, 50%);
+    border: none;
+    border-radius: 12px;
+    color: var(--text-secondary);
+    padding: 15px;
+    width:  50%;
+    margin-top: 40%;
+    box-shadow: 0 5px hsl(211, 100%, 25%);
+    font-size: 1.2rem;
+}
+
+.playButton:hover {
+    background-color: hsl(211, 100%, 40%);
+    cursor: pointer;
+}
+
+.playButton:active {
+    background-color: hsl(211, 100%, 30%);
+    box-shadow: 0 1px hsl(211, 100%, 25%);
+    transform: translateY(4px);
+}

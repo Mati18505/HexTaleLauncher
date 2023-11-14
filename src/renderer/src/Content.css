@@ -1,0 +1,67 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    background-image: url("mountains.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    flex: 1 1 auto;
+}
+
+.grid .title {
+    text-shadow: 1px 1px 4px hsl(0, 0%, 2%);
+    text-align: left;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.description {
+    text-align: justify;
+    text-shadow: 1px 1px 8px hsl(0, 0%, 2%);
+}
+
+.contentLeft {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentLeft > div {
+    width: 75%;
+    text-align: center;
+}
+
+.contentRight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentRight > div {
+    width: 85%;
+    text-align: left;
+}
+
+.box {
+    background-color: hsl(0, 10%, 5%);
+    opacity: 0.8;
+    padding: 10px;
+    margin-bottom: 40px;
+}
+
+.box > h1 {
+    font-size: 22px;
+    margin-top: 0px;
+}
+
+.box > ul {
+    list-style: none;
+    padding-left: 1em;
+}
+
+.box > ul > li {
+    padding: 3px 0 3px 0;
+}
+
+.date {
+    margin-right: 2px;
+}

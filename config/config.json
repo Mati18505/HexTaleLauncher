@@ -1,0 +1,9 @@
+{
+    "gameFolder": "HexTale",
+    "gameExe": "HexTale/HexTale.exe",
+    "remoteURL": "https://hextale.xyz",
+    "remoteRootDir": "files",
+    "remoteVersionFile": "version.txt",
+    "remoteGameDownloadLink": "DownloadLinks.json",
+	"remoteVersionControlFile": "versionControl.txt"
+}

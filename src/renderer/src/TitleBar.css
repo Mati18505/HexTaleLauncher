@@ -1,0 +1,54 @@
+#TitleBar {
+    flex: 0 1 2.5rem;
+    width: 100%;
+    background-color: hsl(0, 0%, 15%);
+    /* opacity: 0.8; */
+    color: var(--text-secondary);
+    
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navLink {
+    padding: 4px 15px 4px 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+
+.navLink:hover {
+    background-color: var(--text-secondary);
+    color: hsl(0, 0%, 15%);
+}
+
+#TitleBar > .left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#TitleBar > .left > .titleParent {
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    display: inline-block;
+}
+
+#TitleBar > .left > .titleParent > .title {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    margin-left: 20px;
+    text-align: left;
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.logo {
+    width: 1.7rem;
+    padding: 4px 15px 4px 15px;
+}
