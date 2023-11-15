@@ -1,7 +1,7 @@
 .navbar {
     width: var(--nav-size);
     height: 100vh;
-    position: fixed;
+    position: absolute;
     background-color: var(--bg-primary);
     transition: width 200ms ease;
 }

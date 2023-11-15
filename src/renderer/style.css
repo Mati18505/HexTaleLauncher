@@ -21,4 +21,5 @@ body {
     --bg-primary: hsl(0, 0%, 15%);
     --bg-secondary: hsl(0, 0%, 10%);
     --nav-size: 4rem;
+    --title-bar-height: 2.5rem;
 }

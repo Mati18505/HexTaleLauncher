@@ -1,10 +1,11 @@
 #TitleBar {
     position: absolute;
     left: var(--nav-size);
-    flex: 0 1 2.5rem;
+    flex: 0 1 var(--title-bar-height);
     width: calc(100% - var(--nav-size));
     background-color: hsl(0, 0%, 15%);
     color: var(--text-secondary);
+    max-height: var(--title-bar-height);
     
     -webkit-user-select: none;
     -webkit-app-region: drag;

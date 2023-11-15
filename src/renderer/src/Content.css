@@ -5,6 +5,12 @@
     background-size: cover;
     background-repeat: no-repeat;
     flex: 1 1 auto;
+
+    position: absolute;
+    width: calc(100% - var(--nav-size));
+    left: var(--nav-size);
+    height: calc(100% - var(--title-bar-height));
+    top: var(--title-bar-height);
 }
 
 .grid .title {
