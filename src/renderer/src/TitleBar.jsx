@@ -17,8 +17,6 @@ export default function TitleBar()
 
     return <div id="TitleBar">
         <div className="left">
-            {/* <span className='navLink options' onClick={() => ShowMenu(!menu)}>&#x2630;</span> */}
-            <img src='hextale-icon.png' className='logo'></img>
             <div className="titleParent"><span className="title">HexTale Launcher</span></div>
         </div>
         <div className="right">

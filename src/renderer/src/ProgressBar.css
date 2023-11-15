@@ -1,0 +1,30 @@
+.progress-bar {
+    box-sizing: border-box;
+    width: 200px;
+    height: 1em;
+    background-color: var(--bg-secondary);
+    margin: auto;
+    border-radius: 0.4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.progress-bar-fill {
+    position: absolute;
+    left: .0em;
+    width: 0;
+    height: 100%;
+    min-width: .5rem;
+    max-width: 100%;
+    background-color: #069;
+    border-radius: 0.4em;
+}
+
+.progress-bar-text {
+    position: absolute;
+    bottom: 2em;
+    text-shadow: 1px 1px 8px hsl(0, 0%, 2%);
+    color: var(--foregraund-primary);
+}

@@ -7,8 +7,15 @@ const API = {
     window: {
       close: () => ipcRenderer.send("app/close"),
       minimize: () => ipcRenderer.send("app/minimize"),
-      go: () => ipcRenderer.send("app/go"),
     },
+
+    misc: {
+      openSite: (site) => {ipcRenderer.send("misc/openSite", site)},
+    },
+
+    launcher: {
+      playButtonClick: () => ipcRenderer.send("launcher/playButtonClick"),
+    }
 }
 
 contextBridge.exposeInMainWorld("app", API);

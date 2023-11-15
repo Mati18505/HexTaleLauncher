@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -64,6 +64,10 @@ ipcMain.on("app/close", () => {
 
 ipcMain.on("app/minimize", () => {
   mainWindow.minimize();
+});
+
+ipcMain.on("misc/openSite", (event, site) => {
+  shell.openExternal(site);
 });
 
 const ffi = require('@breush/ffi-napi');
@@ -132,6 +136,6 @@ HexTaleLauncherLib.Initialize();
 console.log("Checking for updates");
 CheckForUpdates();
 
-ipcMain.on("app/go", () => {
+ipcMain.on("launcher/playButtonClick", () => {
   OnPlayButtonClick();
 });

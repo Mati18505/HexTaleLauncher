@@ -1,8 +1,9 @@
 #TitleBar {
+    position: absolute;
+    left: var(--nav-size);
     flex: 0 1 2.5rem;
-    width: 100%;
+    width: calc(100% - var(--nav-size));
     background-color: hsl(0, 0%, 15%);
-    /* opacity: 0.8; */
     color: var(--text-secondary);
     
     -webkit-user-select: none;
@@ -46,9 +47,4 @@
     text-align: left;
     font-size: 1rem;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-.logo {
-    width: 1.7rem;
-    padding: 4px 15px 4px 15px;
 }

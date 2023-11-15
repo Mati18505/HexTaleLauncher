@@ -20,4 +20,5 @@ body {
     --text-secondary: #ececec;
     --bg-primary: hsl(0, 0%, 15%);
     --bg-secondary: hsl(0, 0%, 10%);
+    --nav-size: 4rem;
 }

@@ -1,7 +1,7 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    background-image: url("mountains.jpg");
+    background-image: url("fantasy.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     flex: 1 1 auto;
@@ -27,7 +27,11 @@
 
 .contentLeft > div {
     width: 75%;
+    height: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .contentRight {

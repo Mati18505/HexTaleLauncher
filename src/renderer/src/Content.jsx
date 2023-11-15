@@ -2,6 +2,7 @@ import React from 'react';
 import PlayButton from './PlayButton';
 import NavigationMenu from './NavigationMenu';
 import './Content.css';
+import ProgressBar from './ProgressBar';
 
 export default function Content()
 {
@@ -11,9 +12,14 @@ export default function Content()
         <div className='grid'>
             <div className='contentLeft'>
                 <div>
+                    <div>
                     <h1 className='title'>HexTale</h1>
                     <p className='description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nihil, dolores magni quos fugit magnam! Corporis, neque reiciendis ullam, iste, illo molestias quo cupiditate consequuntur nulla aspernatur perspiciatis repellat esse.</p>
-                    <PlayButton />
+                    </div>
+                    <div>
+                        <ProgressBar label='Downloading...' progress={50}/>
+                        <PlayButton enabled={true} />
+                    </div>
                 </div>
             </div>
             <div className='contentRight'>
