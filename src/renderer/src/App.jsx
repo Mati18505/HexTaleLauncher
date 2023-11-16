@@ -32,12 +32,14 @@
 
 import React from 'react';
 import TitleBar from './TitleBar';
+import NavigationMenu from './NavigationMenu';
 import Content from './Content';
 
 export default function App()
 {
     return <>
         <TitleBar/>
+        <NavigationMenu/>
         <Content/>
     </>;
 }

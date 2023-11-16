@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PlayButton from './PlayButton';
-import NavigationMenu from './NavigationMenu';
 import './Content.css';
 import ProgressBar from './ProgressBar';
 import InfoText from './InfoText';
@@ -25,7 +24,6 @@ export default function Content()
     }, []);
 
     return <>
-    <NavigationMenu/>
         <div className='grid'>
             <div className='contentLeft'>
                 <div>
