@@ -23,4 +23,5 @@
 
 .playButton-disabled {
     filter: grayscale();
+    pointer-events: none;
 }
