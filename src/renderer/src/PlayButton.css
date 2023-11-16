@@ -5,6 +5,7 @@
     color: var(--text-secondary);
     padding: 15px;
     width:  50%;
+    max-width: 240px;
     margin-top: 1rem;
     box-shadow: 0 5px hsl(211, 100%, 25%);
     font-size: 1.2rem;
