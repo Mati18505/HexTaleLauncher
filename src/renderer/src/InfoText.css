@@ -1,0 +1,5 @@
+.info-text {
+    padding-bottom: 2em;
+    text-shadow: 1px 1px 8px hsl(0, 0%, 2%);
+    color: var(--foregraund-primary);
+}

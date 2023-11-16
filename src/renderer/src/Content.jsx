@@ -3,6 +3,7 @@ import PlayButton from './PlayButton';
 import NavigationMenu from './NavigationMenu';
 import './Content.css';
 import ProgressBar from './ProgressBar';
+import InfoText from './InfoText';
 
 export default function Content()
 {
@@ -33,7 +34,8 @@ export default function Content()
                     <p className='description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nihil, dolores magni quos fugit magnam! Corporis, neque reiciendis ullam, iste, illo molestias quo cupiditate consequuntur nulla aspernatur perspiciatis repellat esse.</p>
                     </div>
                     <div>
-                        {PBVisible && <ProgressBar label={info} progress={progressBarValue}/>}
+                        <InfoText text={info} />
+                        {PBVisible && <ProgressBar progress={progressBarValue}/>}
                         <PlayButton enabled={playEnabled} label={status} />
                     </div>
                 </div>
