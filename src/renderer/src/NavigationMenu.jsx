@@ -49,6 +49,6 @@ export default function NavigationMenu()
             />
         </ul>
     </div>
-    <Menu menu={menu}/>
+    <Menu menu={menu} onHide={() => SetMenu("")}/>
     </div>;
 }

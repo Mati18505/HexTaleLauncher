@@ -19,6 +19,9 @@ const API = {
       progressBarValue: (callback) => ipcRenderer.on('launcher/progressBarValue', callback),
       status: (callback) => ipcRenderer.on('launcher/status', callback),
       info: (callback) => ipcRenderer.on('launcher/info', callback),
+
+      saveSettings: (settings) => ipcRenderer.send("launcher/saveSettings", settings),
+      getSettings: () => ipcRenderer.invoke("launcher/getSettings"),
     },
 }
 

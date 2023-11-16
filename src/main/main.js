@@ -117,5 +117,18 @@ ipcMain.on("launcher/playButtonClick", () => {
   HexTaleLauncherLib.OnPlayButtonClick.async((err, res) => {
     if (err) throw err;
     console.log("OnPlay done with result: " + res);
+    if(res == true)
+      if(settings.exitLauncherWhenGameStarts)
+        mainWindow.close();
   });
+});
+
+var settings = {
+  exitLauncherWhenGameStarts: true
+};
+
+ipcMain.on("launcher/saveSettings", (event, newSettings) => settings = newSettings);
+
+ipcMain.handle("launcher/getSettings", async (event) => {
+  return JSON.stringify(settings);
 });
