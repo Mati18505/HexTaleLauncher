@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PlayButton from './PlayButton';
 import NavigationMenu from './NavigationMenu';
 import './Content.css';
@@ -6,7 +6,23 @@ import ProgressBar from './ProgressBar';
 
 export default function Content()
 {
-    var date = "10.11.2023";
+    const date = "10.11.2023";
+    const [progressBarValue, SetProgress] = useState(0);
+    const [info, SetInfo] = useState("");
+    const [PBVisible, SetPBVisible] = useState(false);
+    const [status, SetStatus] = useState("Play");
+    const [playEnabled, SetPlayEnabled] = useState(true);
+
+    useEffect(()=>{
+        app.launcher.progressBarValue((event, value) => SetProgress(value) );
+        app.launcher.info((event, message) => SetInfo(message) );
+        app.launcher.progressBarVisible((event, visible) => SetPBVisible(visible) );
+        app.launcher.status((event, message) => {
+            SetStatus(message);
+            SetPlayEnabled(message == "Play");
+        } );
+    }, []);
+
     return <>
     <NavigationMenu/>
         <div className='grid'>
@@ -17,8 +33,8 @@ export default function Content()
                     <p className='description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nihil, dolores magni quos fugit magnam! Corporis, neque reiciendis ullam, iste, illo molestias quo cupiditate consequuntur nulla aspernatur perspiciatis repellat esse.</p>
                     </div>
                     <div>
-                        <ProgressBar label='Downloading...' progress={50}/>
-                        <PlayButton enabled={true} />
+                        {PBVisible && <ProgressBar label={info} progress={progressBarValue}/>}
+                        <PlayButton enabled={playEnabled} label={status} />
                     </div>
                 </div>
             </div>

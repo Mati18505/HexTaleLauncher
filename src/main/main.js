@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
+const ffi = require('@breush/ffi-napi');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -26,57 +27,9 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-
-ipcMain.on("app/close", () => {
-  app.quit();
-  console.log("Deinitializing");
-  HexTaleLauncherLib.DeInitialize();
-});
-
-ipcMain.on("app/minimize", () => {
-  mainWindow.minimize();
-});
-
-ipcMain.on("misc/openSite", (event, site) => {
-  shell.openExternal(site);
-});
-
-const ffi = require('@breush/ffi-napi');
-
-function TEXT(text) {
-  return Buffer.from('${text}\0', "ucs2");
-}
-
-const HexTaleLauncherLib = new ffi.Library(path.join(__dirname, "../../HexTaleLauncherLibrary"), {
+var HexTaleLauncherLib = new ffi.Library(path.join(__dirname, "../../HexTaleLauncherLibrary"), {
   "OnPlayButtonClick": ["bool", []],
   "CheckForUpdates": ["void", []],
   "Initialize": ["void", []],
@@ -88,54 +41,81 @@ const HexTaleLauncherLib = new ffi.Library(path.join(__dirname, "../../HexTaleLa
   "SetProgressBarVisibilityCallback": ["void", ['pointer']]
 });
 
-var infoCallback = ffi.Callback('void', ['string'],
-function(message) {
-  console.log("info: " + message);
-});
-HexTaleLauncherLib.SetInfoCallback(infoCallback);
+var infoCallback;
+var alertCallback;
+var statusCallback;
+var progressBarValueCallback;
+var progressBarVisibilityCallback;
 
-var alertCallback = ffi.Callback('void', ['string'],
-function(message) {
-  console.log("alert: " + message);
-});
-HexTaleLauncherLib.SetAlertCallback(alertCallback);
+function InitializeLibrary(){
+  infoCallback = ffi.Callback('void', ['string'], (message) => mainWindow.webContents.send("launcher/info", message));
+  HexTaleLauncherLib.SetInfoCallback(infoCallback);
+  
+  alertCallback = ffi.Callback('void', ['string'], (message) => dialog.showErrorBox("Warning", message));
+  HexTaleLauncherLib.SetAlertCallback(alertCallback);
 
-var statusCallback = ffi.Callback('void', ['string'],
-function(message) {
-  console.log("status: " + message);
-});
-HexTaleLauncherLib.SetStatusCallback(statusCallback);
+  statusCallback = ffi.Callback('void', ['string'], (message) => mainWindow.webContents.send("launcher/status", message));
+  HexTaleLauncherLib.SetStatusCallback(statusCallback);
+  
+  progressBarValueCallback = ffi.Callback('void', ['int'], (value) => mainWindow.webContents.send("launcher/progressBarValue", value));
+  HexTaleLauncherLib.SetProgressBarValueCallback(progressBarValueCallback);
+  
+  progressBarVisibilityCallback = ffi.Callback('void', ['int'], (visible) => mainWindow.webContents.send("launcher/progressBarVisible", Boolean(visible)));
+  HexTaleLauncherLib.SetProgressBarVisibilityCallback(progressBarVisibilityCallback);
+}
 
-var progressBarValueCallback = ffi.Callback('void', ['int'],
-function(value) {
-  console.log("progress: " + value + "%");
-});
-HexTaleLauncherLib.SetProgressBarValueCallback(progressBarValueCallback);
+function InitializeLauncher() {
+  console.log("Initializing");
+  HexTaleLauncherLib.Initialize();
+  console.log("Checking for updates");
 
-var progressBarVisibilityCallback = ffi.Callback('void', ['bool'],
-function(visible) {
-  console.log("progress bar visibility: " + visible);
+  HexTaleLauncherLib.CheckForUpdates.async((err, res) => {
+    if (err) throw err;
+    console.log("Checking for updates done");
+  });
+}
+app.on('ready', () => {
+  InitializeLibrary();
+  createWindow();
+  setTimeout(()=>{InitializeLauncher(); },1000); // we wait until the window opens to receive all callbacks
 });
-HexTaleLauncherLib.SetProgressBarVisibilityCallback(progressBarVisibilityCallback);
 
-process.on('exit', function() {
-  infoCallback;
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
+
+ipcMain.on("app/close", () => {
+  app.quit();
+  console.log("Deinitializing");
+  HexTaleLauncherLib.DeInitialize();
+  
+  //Avoids garbage collection?
+  progressBarVisibilityCallback;
+  progressBarValueCallback;
+  statusCallback;
   alertCallback;
+  infoCallback;
 });
 
-async function CheckForUpdates() {
-  await HexTaleLauncherLib.CheckForUpdates();
-}
+ipcMain.on("app/minimize", () => {
+  mainWindow.minimize();
+});
 
-async function OnPlayButtonClick() {
-  await HexTaleLauncherLib.OnPlayButtonClick();
-}
-
-console.log("Initializing");
-HexTaleLauncherLib.Initialize();
-console.log("Checking for updates");
-CheckForUpdates();
+ipcMain.on("misc/openSite", (event, site) => {
+  shell.openExternal(site);
+});
 
 ipcMain.on("launcher/playButtonClick", () => {
-  OnPlayButtonClick();
+  HexTaleLauncherLib.OnPlayButtonClick.async((err, res) => {
+    if (err) throw err;
+    console.log("OnPlay done with result: " + res);
+  });
 });

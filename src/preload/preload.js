@@ -15,7 +15,11 @@ const API = {
 
     launcher: {
       playButtonClick: () => ipcRenderer.send("launcher/playButtonClick"),
-    }
+      progressBarVisible: (callback) => ipcRenderer.on('launcher/progressBarVisible', callback),
+      progressBarValue: (callback) => ipcRenderer.on('launcher/progressBarValue', callback),
+      status: (callback) => ipcRenderer.on('launcher/status', callback),
+      info: (callback) => ipcRenderer.on('launcher/info', callback),
+    },
 }
 
 contextBridge.exposeInMainWorld("app", API);
