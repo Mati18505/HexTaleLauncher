@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './NavigationMenu.css';
 import Menu from './Menu/Menu';
-
+import imgLogo from '@img/hextale-icon.png';
 
 function NavItem({content, onClick}){
     return <li className='nav-item'>
@@ -40,7 +40,7 @@ export default function NavigationMenu()
     <div className='navbar'>
         <ul className='navbar-nav'>
             <NavItem 
-                content={<img src='hextale-icon.png' className='logo'></img>} 
+                content={<img src={imgLogo} className='logo'></img>} 
                 onClick={() => app.misc.openSite("https://hextale.xyz")}
             />
             <NavItem 
