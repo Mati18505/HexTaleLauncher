@@ -29,7 +29,7 @@ const createWindow = () => {
   }
 };
 
-var HexTaleLauncherLib = new ffi.Library(path.join(__dirname, "../../HexTaleLauncherLibrary"), {
+var HexTaleLauncherLib = new ffi.Library('HexTaleLauncherLibrary', {
   "OnPlayButtonClick": ["bool", []],
   "CheckForUpdates": ["void", []],
   "Initialize": ["void", []],

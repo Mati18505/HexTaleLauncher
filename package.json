@@ -2,7 +2,7 @@
   "name": "hextalelauncher",
   "productName": "hextalelauncher",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "HexTale launcher",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",

@@ -1,5 +1,38 @@
+const fs = require("fs");
+const { join } = require('path');
+
+function isFile(target) {
+  return fs.statSync(target).isFile();
+}
+
+function copyFile(source, target) {
+  fs.copyFileSync(source, target);
+}
+
+function copyFiles(source, target) {
+  const dirs = fs.readdirSync(source);
+  for (const d of dirs) {
+    if (isFile(join(source, d))) {
+      copyFile(join(source, d), join(target, d));
+    } else {
+      fs.mkdirSync(join(target, d));
+      copyFiles(join(source, d), join(target, d));
+    }
+  }
+}
+
+
+
 module.exports = {
-  packagerConfig: {},
+  hooks: {
+    postPackage: async (forgeConfig, options) => {
+      copyFiles("./src/dll", options.outputPaths[0]+"/");
+    }
+  },
+  packagerConfig: {
+    asar: true
+  },
+
   rebuildConfig: {},
   makers: [
     {
