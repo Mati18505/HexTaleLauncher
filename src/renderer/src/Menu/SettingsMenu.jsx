@@ -56,14 +56,15 @@ export default function SettingsMenu({options, onNeedHide}) {
         <div>
             <ListButton 
             label={<><i className="icon-folder"></i> Show in folder</>}
-            onClick={() => console.log("clicked folder")}
+            onClick={() => app.launcher.openGamePathInExplorer()}
             />
             <ListButton 
             label={<><i className="icon-wrench"></i> Check and Repair</>}
-            onClick={() => console.log("clicked repair")}
+            onClick={() => app.launcher.repair()}
             />
             <ListButton 
             label={<><i className="icon-trash-empty"></i> Uninstall</>}
+            onClick={() => app.launcher.uninstall()}
             />
             <hr/>
             <Checkbox name="Exit launcher when game starts" state={exitLauncherWhenGameStarts} onChange={ChangeExitLauncherWhenGameStartsChange} />

@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const ffi = require('@breush/ffi-napi');
+const fs = require('fs');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -34,11 +35,15 @@ var HexTaleLauncherLib = new ffi.Library('HexTaleLauncherLibrary', {
   "CheckForUpdates": ["void", []],
   "Initialize": ["void", []],
   "DeInitialize": ["void", []],
+  "OpenGameDir": ["void", []],
+  "CheckAndRepair": ["void", []],
+  "Uninstall": ["void", []],
   "SetInfoCallback": ["void", ['pointer']],
   "SetAlertCallback": ["void", ['pointer']],
   "SetProgressBarValueCallback": ["void", ['pointer']],
   "SetStatusCallback": ["void", ['pointer']],
-  "SetProgressBarVisibilityCallback": ["void", ['pointer']]
+  "SetProgressBarVisibilityCallback": ["void", ['pointer']],
+  "SetErrorCallback": ["void", ['pointer']]
 });
 
 var infoCallback;
@@ -46,12 +51,13 @@ var alertCallback;
 var statusCallback;
 var progressBarValueCallback;
 var progressBarVisibilityCallback;
+var errorCallback;
 
 function InitializeLibrary(){
   infoCallback = ffi.Callback('void', ['string'], (message) => mainWindow.webContents.send("launcher/info", message));
   HexTaleLauncherLib.SetInfoCallback(infoCallback);
   
-  alertCallback = ffi.Callback('void', ['string'], (message) => dialog.showErrorBox("Warning", message));
+  alertCallback = ffi.Callback('void', ['string'], (message) => dialog.showMessageBoxSync(null, {title:"Warning", message:message, type:'warning'}));
   HexTaleLauncherLib.SetAlertCallback(alertCallback);
 
   statusCallback = ffi.Callback('void', ['string'], (message) => mainWindow.webContents.send("launcher/status", message));
@@ -62,21 +68,33 @@ function InitializeLibrary(){
   
   progressBarVisibilityCallback = ffi.Callback('void', ['int'], (visible) => mainWindow.webContents.send("launcher/progressBarVisible", Boolean(visible)));
   HexTaleLauncherLib.SetProgressBarVisibilityCallback(progressBarVisibilityCallback);
+  
+  errorCallback = ffi.Callback('void', ['string'], (errorMessage) => dialog.showErrorBox("Launcher exception", errorMessage));
+  HexTaleLauncherLib.SetErrorCallback(errorCallback);
 }
 
 function InitializeLauncher() {
   console.log("Initializing");
   HexTaleLauncherLib.Initialize();
-  console.log("Checking for updates");
+}
 
-  HexTaleLauncherLib.CheckForUpdates.async((err, res) => {
-    if (err) throw err;
-    console.log("Checking for updates done");
+function LoadConfig() {
+  fs.readFile('./config/settings.json', 'utf8', (err, data) => {
+    if (err)
+    {
+      dialog.showErrorBox("Could not load settings", err);
+    } 
+    else 
+    {
+      settings = JSON.parse(data);
+    }
   });
 }
+
 app.on('ready', () => {
   InitializeLibrary();
   createWindow();
+  LoadConfig();
   setTimeout(()=>{InitializeLauncher(); },1000); // we wait until the window opens to receive all callbacks
 });
 
@@ -103,6 +121,7 @@ ipcMain.on("app/close", () => {
   statusCallback;
   alertCallback;
   infoCallback;
+  errorCallback;
 });
 
 ipcMain.on("app/minimize", () => {
@@ -127,8 +146,21 @@ var settings = {
   exitLauncherWhenGameStarts: true
 };
 
-ipcMain.on("launcher/saveSettings", (event, newSettings) => settings = newSettings);
+ipcMain.on("launcher/saveSettings", (event, newSettings) => {
+  settings = newSettings;
+
+  try { 
+    fs.writeFileSync('./config/settings.json', JSON.stringify(newSettings), 'utf-8');
+   }
+  catch(err) { 
+    dialog.showErrorBox("Could not save settings", err);
+   }
+});
 
 ipcMain.handle("launcher/getSettings", async (event) => {
   return JSON.stringify(settings);
 });
+
+ipcMain.on("launcher/openGamePathInExplorer", (event) => HexTaleLauncherLib.OpenGameDir());
+ipcMain.on("launcher/repair", (event) => HexTaleLauncherLib.CheckAndRepair.async((err, res) => {if (err) throw err;}));
+ipcMain.on("launcher/uninstall", (event) => HexTaleLauncherLib.Uninstall.async((err, res) => {if (err) throw err;}));

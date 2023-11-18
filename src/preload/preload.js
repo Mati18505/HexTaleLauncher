@@ -19,6 +19,9 @@ const API = {
       progressBarValue: (callback) => ipcRenderer.on('launcher/progressBarValue', callback),
       status: (callback) => ipcRenderer.on('launcher/status', callback),
       info: (callback) => ipcRenderer.on('launcher/info', callback),
+      openGamePathInExplorer: () => {ipcRenderer.send("launcher/openGamePathInExplorer")},
+      repair: () => {ipcRenderer.send("launcher/repair")},
+      uninstall: () => {ipcRenderer.send("launcher/uninstall")},
 
       saveSettings: (settings) => ipcRenderer.send("launcher/saveSettings", settings),
       getSettings: () => ipcRenderer.invoke("launcher/getSettings"),

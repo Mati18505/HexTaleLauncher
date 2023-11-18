@@ -19,7 +19,7 @@ export default function Content()
         app.launcher.progressBarVisible((event, visible) => SetPBVisible(visible) );
         app.launcher.status((event, message) => {
             SetStatus(message);
-            SetPlayEnabled(message == "Play");
+            SetPlayEnabled(message == "Play" || message == "Download");
         } );
     }, []);
 
