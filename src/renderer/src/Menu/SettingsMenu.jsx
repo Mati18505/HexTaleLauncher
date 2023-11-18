@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./settingsMenuInputs.css"
 import "./settingsMenu.css"
+import Popup from "../PopupMessage"
 
 function Checkbox({name, state, onChange}) {
     return <label className="container">{name}
@@ -9,7 +10,7 @@ function Checkbox({name, state, onChange}) {
     </label>
 }
 
-function SettingsButton({label, enabled, onClick})
+export function SettingsButton({label, enabled, onClick})
 {
     var classes = "settings-button ";
     if(!enabled)
@@ -64,7 +65,7 @@ export default function SettingsMenu({options, onNeedHide}) {
             />
             <ListButton 
             label={<><i className="icon-trash-empty"></i> Uninstall</>}
-            onClick={() => app.launcher.uninstall()}
+            onClick={() => Popup("All data from game folder will be deleted. Uninstall the game?", app.launcher.uninstall)}
             />
             <hr/>
             <Checkbox name="Exit launcher when game starts" state={exitLauncherWhenGameStarts} onChange={ChangeExitLauncherWhenGameStartsChange} />
