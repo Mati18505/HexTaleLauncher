@@ -79,16 +79,19 @@ function InitializeLauncher() {
 }
 
 function LoadConfig() {
-  fs.readFile('./config/settings.json', 'utf8', (err, data) => {
-    if (err)
-    {
-      dialog.showErrorBox("Could not load settings", err);
-    } 
-    else 
-    {
-      settings = JSON.parse(data);
-    }
-  });
+  if(fs.existsSync('./config/settings.json'))
+  {
+    fs.readFile('./config/settings.json', 'utf8', (err, data) => {
+      if (err)
+      {
+        dialog.showErrorBox("Could not load settings", "Cannot read settings file.");
+      } 
+      else 
+      {
+        settings = JSON.parse(data);
+      }
+    });
+  }
 }
 
 app.on('ready', () => {
