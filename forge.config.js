@@ -30,7 +30,8 @@ module.exports = {
     }
   },
   packagerConfig: {
-    asar: true
+    asar: true,
+    ignore: ["config", "HexTale"]
   },
 
   rebuildConfig: {},
