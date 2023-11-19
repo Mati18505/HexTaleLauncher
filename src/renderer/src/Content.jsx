@@ -29,7 +29,10 @@ export default function Content()
                 <div>
                     <div>
                     <h1 className='title'>HexTale</h1>
-                    <p className='description'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nihil, dolores magni quos fugit magnam! Corporis, neque reiciendis ullam, iste, illo molestias quo cupiditate consequuntur nulla aspernatur perspiciatis repellat esse.</p>
+                    <p className='description'>
+                        Hey! Are you interested in exciting gameplay in nostale?
+                        If yes, you're in right place! Join our discord, download game and join to our world! Begin your very own adventure, become our hero, SAVE THE WORLD!
+                    </p>
                     </div>
                     <div>
                         <InfoText text={info} />
@@ -46,7 +49,7 @@ export default function Content()
                             <li className="li-link" onClick={() => app.misc.openSite("https://hextale.xyz")}>
                                 <i className='icon-globe'></i> Check our website
                             </li>
-                            <li className="li-link" onClick={() => app.misc.openSite("https://discord.gg/bfhe43Mh9")}>
+                            <li className="li-link" onClick={() => app.misc.openSite("https://discord.gg/sxMaqWpv")}>
                                 <IconDiscord/> Join our discord channel
                             </li>
                         </ul>
