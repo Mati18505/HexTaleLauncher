@@ -75,3 +75,12 @@
 .date {
     margin-right: 2px;
 }
+
+.li-link:hover {
+    background-color: var(--bg-secondary);
+    cursor: pointer;
+}
+
+.bootstrap-icon {
+    margin: auto 0.2em;
+}
