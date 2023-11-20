@@ -182,3 +182,7 @@ function InitializeAutoUpdater() {
 autoUpdater.on("error", (error) => {
   ShowError("Update error: " + error);
 });
+
+ipcMain.handle("misc/getAppVersion", async (event) => {
+  return app.getVersion();
+});

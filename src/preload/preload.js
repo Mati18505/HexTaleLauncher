@@ -11,6 +11,7 @@ const API = {
 
     misc: {
       openSite: (site) => {ipcRenderer.send("misc/openSite", site)},
+      getAppVersion: () => ipcRenderer.invoke("misc/getAppVersion"),
     },
 
     launcher: {

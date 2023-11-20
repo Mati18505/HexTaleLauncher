@@ -84,3 +84,10 @@
 .bootstrap-icon {
     margin: auto 0.2em;
 }
+
+.versionText {
+    position: absolute;
+    bottom: .5rem;
+    right: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
