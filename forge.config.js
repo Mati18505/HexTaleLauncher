@@ -78,5 +78,17 @@ module.exports = {
         ],
       },
     },
+  ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'Mati18505',
+          name: 'HexTaleLauncher-Release'
+        },
+        prerelease: false
+      }
+    }
   ]
 };

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog, autoUpdater } = require('electron');
 const path = require('path');
 const ffi = require('@breush/ffi-napi');
 const fs = require('fs');
@@ -69,7 +69,7 @@ function InitializeLibrary(){
   progressBarVisibilityCallback = ffi.Callback('void', ['int'], (visible) => mainWindow.webContents.send("launcher/progressBarVisible", Boolean(visible)));
   HexTaleLauncherLib.SetProgressBarVisibilityCallback(progressBarVisibilityCallback);
   
-  errorCallback = ffi.Callback('void', ['string'], (errorMessage) => dialog.showErrorBox("Launcher exception", errorMessage));
+  errorCallback = ffi.Callback('void', ['string'], (errorMessage) => ShowError(errorMessage));
   HexTaleLauncherLib.SetErrorCallback(errorCallback);
 }
 
@@ -99,6 +99,8 @@ app.on('ready', () => {
   createWindow();
   LoadConfig();
   setTimeout(()=>{InitializeLauncher(); },1000); // we wait until the window opens to receive all callbacks
+  if(app.isPackaged)
+    InitializeAutoUpdater();
 });
 
 app.on('window-all-closed', () => {
@@ -145,6 +147,10 @@ ipcMain.on("launcher/playButtonClick", () => {
   });
 });
 
+function ShowError(errorMessage) {
+  dialog.showErrorBox("Launcher error", errorMessage);
+}
+
 var settings = {
   exitLauncherWhenGameStarts: true
 };
@@ -167,3 +173,12 @@ ipcMain.handle("launcher/getSettings", async (event) => {
 ipcMain.on("launcher/openGamePathInExplorer", (event) => HexTaleLauncherLib.OpenGameDir());
 ipcMain.on("launcher/repair", (event) => HexTaleLauncherLib.CheckAndRepair.async((err, res) => {if (err) throw err;}));
 ipcMain.on("launcher/uninstall", (event) => HexTaleLauncherLib.Uninstall.async((err, res) => {if (err) throw err;}));
+
+function InitializeAutoUpdater() {
+  autoUpdater.setFeedURL({url: "https://hextale.xyz/files/launcher"});
+  autoUpdater.checkForUpdates();
+}
+
+autoUpdater.on("error", (error) => {
+  ShowError("Update error: " + error);
+});
