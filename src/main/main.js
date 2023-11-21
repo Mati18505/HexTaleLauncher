@@ -31,7 +31,7 @@ const createWindow = () => {
 };
 
 var HexTaleLauncherLib = new ffi.Library('HexTaleLauncherLibrary', {
-  "OnPlayButtonClick": ["bool", []],
+  "OnPlayButtonClick": ["void", []],
   "CheckForUpdates": ["void", []],
   "Initialize": ["void", []],
   "DeInitialize": ["void", []],
@@ -69,7 +69,7 @@ function InitializeLibrary(){
   progressBarVisibilityCallback = ffi.Callback('void', ['int'], (visible) => mainWindow.webContents.send("launcher/progressBarVisible", Boolean(visible)));
   HexTaleLauncherLib.SetProgressBarVisibilityCallback(progressBarVisibilityCallback);
   
-  errorCallback = ffi.Callback('void', ['string'], (errorMessage) => ShowError(errorMessage));
+  errorCallback = ffi.Callback('void', ['int', 'string'], (errorType, errorMessage) => HandleException(errorType, errorMessage));
   HexTaleLauncherLib.SetErrorCallback(errorCallback);
 }
 
@@ -138,12 +138,10 @@ ipcMain.on("misc/openSite", (event, site) => {
 });
 
 ipcMain.on("launcher/playButtonClick", () => {
-  HexTaleLauncherLib.OnPlayButtonClick.async((err, res) => {
-    if (err) throw err;
-    console.log("OnPlay done with result: " + res);
-    if(res == true)
-      if(settings.exitLauncherWhenGameStarts)
-        mainWindow.close();
+  HexTaleLauncherLib.OnPlayButtonClick.async((err) => {
+    if(err) throw err;
+    if(settings.exitLauncherWhenGameStarts)
+      mainWindow.close();
   });
 });
 
@@ -186,3 +184,33 @@ autoUpdater.on("error", (error) => {
 ipcMain.handle("misc/getAppVersion", async (event) => {
   return app.getVersion();
 });
+
+function HandleException(errorType, errorMessage)
+{
+  const ErrorType = {
+    General: 0,
+    InvalidOperation: 1,
+    BadConfig: 2
+  };
+
+  const errorTypesMessages = [
+    "Launcher general error",
+    "You cannot do this now!",
+    "Bad config error"
+  ];
+
+  const ShowMinorError = (title, message) => dialog.showMessageBoxSync(null, {title:title, message:message, type:'warning'});
+
+  var title;
+  if(errorType === -1)
+    title = "Unknown error";
+  else
+    title = errorTypesMessages[errorType];
+
+  if(errorType === ErrorType.InvalidOperation)
+    ShowMinorError(title, title);
+  else if(errorType === ErrorType.BadConfig)
+    ShowMinorError(title, errorMessage + "\n\nCheck your config file (launcherDir/config/config.json)");
+  else
+    dialog.showErrorBox(title, errorMessage);
+}
