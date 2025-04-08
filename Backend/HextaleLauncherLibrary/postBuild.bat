@@ -1,0 +1,1 @@
+copy %cd%\config\* %cd%\bin\Debug\net6.0-windows\config
